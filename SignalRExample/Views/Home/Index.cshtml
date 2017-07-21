@@ -1,0 +1,45 @@
+﻿@model dynamic
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+    <script src="~/Scripts/jquery-1.6.4.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+        $(function () {
+            // hub connection will be started by this variable
+            var hub = $.connection.hub;
+            // our hub, the echo part comes from our hubname
+            var echo = $.connection.echo;
+            // our callback function which is called from server side
+            echo.client.replied = function (message) {
+                $("#result").append("<div>Message from signalr server:" + message + "</div>");
+            }
+
+            // at first, start our hub then wait for connection to be established
+            hub.start()
+                .done(function () {
+                    // connection now establised, so we can call our server function
+                    $("#result").append("<div>Connection to Signalr is ready!</div>");
+
+                    // we are calling signalR function
+                    echo.server.say("Hello my friend!"); 
+                });
+
+        });
+    </script>
+</head>
+<body>
+    <h3>Hello SIGNALR!</h3>
+    <div id="result">
+
+    </div>
+</body>
+</html>
